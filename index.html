@@ -89,7 +89,7 @@
 
         async function fetchData() {
             try {
-                const response = await fetch(SHEET_CSV_URL);
+                const response = await fetch(SHEET_CSV_URL + '&t=' + new Date().getTime());
                 const data = await response.text();
                 const rows = data.split('\n').slice(1); 
 
