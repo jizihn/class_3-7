@@ -2,216 +2,232 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3-7반 통합 게시판</title>
+    <title>3학년 7반 정보 보드</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; margin: 0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        
-        /* 헤더 및 탭 */
-        .header-area { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
-        h1 { color: #2c3e50; margin: 0; }
-        .write-btn { background-color: #3498db; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 0.9em; }
-        
-        .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 2px solid #ddd; }
-        .tab-button { background: none; border: none; padding: 10px 20px; font-size: 1.1em; cursor: pointer; color: #7f8c8d; font-weight: bold; }
-        .tab-button.active { color: #3498db; border-bottom: 3px solid #3498db; margin-bottom: -2px; }
-        
-        /* 목록 디자인 */
-        .notice-list { list-style: none; padding: 0; margin: 0; }
-        .notice-item { border-bottom: 1px solid #ddd; padding: 15px 0; }
-        .notice-item.past-event .notice-title { text-decoration: line-through; color: #95a5a6; }
-        .notice-header { display: flex; align-items: baseline; gap: 15px; flex-wrap: wrap; }
-        .notice-meta { font-size: 0.85em; color: #7f8c8d; }
-        .notice-date { font-weight: bold; color: #e67e22; }
-        .notice-title { font-size: 1.1em; color: #2980b9; font-weight: bold; cursor: pointer; flex-grow: 1; }
-        .notice-content { display: none; margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #3498db; line-height: 1.6; white-space: pre-wrap; }
-        .notice-content.active { display: block; }
-        
-        /* 파일/이미지 표시 */
-        .attached-img { max-width: 100%; margin-top: 10px; border-radius: 5px; border: 1px solid #ddd; }
-        .attached-file { display: inline-block; margin-top: 10px; padding: 5px 10px; background: #ecf0f1; border-radius: 4px; text-decoration: none; color: #2c3e50; font-size: 0.9em; }
-
-        /* 급식 버스 노선도 UI */
-        .bus-route-container { display: flex; justify-content: space-around; align-items: flex-start; margin-top: 20px; padding: 20px; background: #fdfefe; border-radius: 8px; border: 2px solid #bdc3c7; position: relative; }
-        .bus-line { position: absolute; top: 40px; left: 10%; right: 10%; height: 6px; background: #bdc3c7; z-index: 1; }
-        .bus-stop { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 45%; }
-        .stop-circle { width: 24px; height: 24px; border-radius: 50%; background: white; border: 6px solid #bdc3c7; margin-bottom: 15px; }
-        .bus-stop.today .stop-circle { border-color: #e74c3c; background: #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.5); }
-        .stop-label { font-weight: bold; font-size: 1.1em; margin-bottom: 10px; }
-        .meal-card { background: #fff; border: 1px solid #eee; padding: 15px; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; border-radius: 8px; min-height: 100px; }
+        .hidden { display: none; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: #000; margin: 0; padding: 12px; color: #fff; line-height: 1.5; }
+        .screen { max-width: 500px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 5px; margin-bottom: 10px; }
+        .logout-btn { background: #ff3b30; color: #fff; padding: 4px 10px; border-radius: 6px; font-size: 12px; border: none; cursor: pointer; }
+        .section-main { background: #1c1c1e; border-radius: 12px; padding: 18px; margin-bottom: 12px; border: 2px solid #ff9f0a; }
+        .section-main h3 { margin: 0 0 10px 0; font-size: 0.9em; color: #ff9f0a; }
+        .section-weekly { background: #1c1c1e; border-radius: 12px; padding: 18px; margin-bottom: 12px; border: 2px solid #30d158; }
+        .section-weekly h3 { margin: 0 0 10px 0; font-size: 0.9em; color: #30d158; }
+        .content-area { font-size: 1em; white-space: pre-wrap; font-weight: bold; }
+        .upload-box { background: #1c1c1e; border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #333; }
+        .upload-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        select, input, textarea { background: #111; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; font-size: 15px; width: 100%; box-sizing: border-box; }
+        textarea { resize: none; }
+        .btn-up { background: #fff; color: #000; font-weight: bold; border: none; border-radius: 8px; width: 60px; cursor: pointer; }
+        .list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .card-list { background: #1c1c1e; border-radius: 12px; padding: 12px; border: 1px solid #222; min-height: 120px; }
+        .card-list h4 { margin: 0 0 8px 0; font-size: 0.8em; color: #888; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .item { font-size: 0.85em; margin-bottom: 10px; position: relative; border-bottom: 1px solid #2a2a2e; padding-bottom: 6px; white-space: pre-wrap; }
+        .date-tag { color: #30d158; font-weight: bold; display: block; font-size: 0.8em; margin-bottom: 2px; }
+        .del { position: absolute; top: 0; right: 0; color: #ff453a; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .auth-box { padding: 50px 20px; text-align: center; }
+        .auth-box h1 { margin-bottom: 30px; }
+        .auth-box input { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-area">
-            <h1>🏫 3-7반 통합 게시판</h1>
-            <a href="https://forms.gle/3FyK69ghFptcymtdA" target="_blank" class="write-btn">관리자 글쓰기</a>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab-button active" onclick="changeTab('공지')">공지사항</button>
-            <button class="tab-button" onclick="changeTab('수행평가')">수행평가</button>
-            <button class="tab-button" onclick="changeTab('학사일정')">학사일정</button>
-            <button class="tab-button" onclick="changeTab('급식')">급식 노선도</button>
-        </div>
 
-        <div id="content-area">
-            <ul id="notice-list" class="notice-list"><li>데이터를 불러오는 중입니다...</li></ul>
+    <div id="login-screen" class="screen">
+        <div class="auth-box">
+            <h1>3-7 BOARD</h1>
+            <input type="email" id="login-email" placeholder="이메일">
+            <input type="password" id="login-password" placeholder="비밀번호">
+            <button onclick="login()" style="width:100%; padding:14px; margin-bottom:10px;">로그인</button>
+            <button onclick="googleLogin()" style="width:100%; padding:14px; background:#4285F4; color:#fff; border:none; border-radius:8px; cursor:pointer;">Google Login</button>
+            <p onclick="showSignup()" style="color:#888; margin-top:20px; font-size:13px; cursor:pointer;">회원가입</p>
         </div>
     </div>
 
-    <script>
-        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQx_-IdpUxh0uUpcCTz5LLEmXc_POghVyHfKm4K_UiTPEEBJoyCRaArBijDf_S7If5oUiH6_2QzJUEF/pub?output=csv';
-        let allData = [];
+    <div id="signup-screen" class="screen hidden">
+        <div class="auth-box">
+            <h2>회원가입</h2>
+            <input type="email" id="signup-email" placeholder="이메일">
+            <input type="number" id="signup-number" placeholder="출석 번호">
+            <input type="password" id="signup-password" placeholder="비밀번호 (6자리 이상)">
+            <button onclick="signup()" style="width:100%; padding:14px;">가입 완료</button>
+            <p onclick="showLogin()" style="margin-top:20px; color:#888; cursor:pointer;">돌아가기</p>
+        </div>
+    </div>
 
-        const getTodayStr = () => {
-            const d = new Date();
-            d.setHours(d.getHours() + 9);
-            return d.toISOString().split('T')[0];
+    <div id="sso-number-screen" class="screen hidden">
+        <div class="auth-box">
+            <h2>번호 설정</h2>
+            <p style="color:#888; font-size:13px;">최초 1회 번호를 설정해야 합니다.</p>
+            <input type="number" id="sso-number" placeholder="출석 번호">
+            <button onclick="saveSsoNumber()" style="width:100%; padding:14px;">저장 및 시작</button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen hidden">
+        <div class="header">
+            <span id="user-info" style="font-weight:bold"></span>
+            <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+        <div class="section-main">
+            <h3>🍴 내일의 급식</h3>
+            <div id="top-meal" class="content-area">정보 없음</div>
+        </div>
+        <div class="section-weekly">
+            <h3>📅 향후 일주일 일정</h3>
+            <div id="top-weekly" class="content-area">일정 없음</div>
+        </div>
+        <div class="upload-box">
+            <div class="upload-row">
+                <select id="post-cat" style="flex:1.5;">
+                    <option value="meal">🍴 급식</option>
+                    <option value="assessment">📝 수행</option>
+                    <option value="homework">📚 과제</option>
+                    <option value="material">📎 기타</option>
+                </select>
+                <input type="date" id="post-date" style="flex:2;">
+                <button class="btn-up" onclick="addPost()">UP</button>
+            </div>
+            <textarea id="post-text" placeholder="공유할 내용..." rows="2"></textarea>
+        </div>
+        <div class="list-grid">
+            <div class="card-list"><h4>📁 전체 수행</h4><div id="list-assessment"></div></div>
+            <div class="card-list"><h4>🍽️ 급식 기록</h4><div id="list-meal"></div></div>
+            <div class="card-list"><h4>📚 과제물</h4><div id="list-homework"></div></div>
+            <div class="card-list"><h4>📎 기타자료</h4><div id="list-material"></div></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, addDoc, deleteDoc, onSnapshot, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCUFW2g9ovTiZQU2XBTspQuiI6vkwuqqMY",
+            authDomain: "classboard-17ab7.firebaseapp.com",
+            projectId: "classboard-17ab7",
+            storageBucket: "classboard-17ab7.firebasestorage.app",
+            messagingSenderId: "487935301370",
+            appId: "1:487935301370:web:7228e524e1a52a65661b43"
         };
-        
-        const getTomorrowStr = () => {
-            const d = new Date();
-            d.setHours(d.getHours() + 9);
-            d.setDate(d.getDate() + 1);
-            return d.toISOString().split('T')[0];
-        };
 
-        function convertDriveLink(url) {
-            if (!url) return '';
-            const match = url.match(/id=([^&]+)/) || url.match(/d\/([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-            }
-            return url;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+        let profile = null;
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
         }
 
-        async function fetchData() {
-            try {
-                const response = await fetch(SHEET_CSV_URL + '&t=' + new Date().getTime());
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); 
-
-                rows.forEach(row => {
-                    if (!row.trim()) return;
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
-                    
-                    if (cols.length >= 7) {
-                        allData.push({
-                            timestamp: cols[0],   
-                            category: cols[2],    
-                            targetDate: cols[3],  
-                            title: cols[4],       
-                            content: cols[5],     
-                            author: cols[6],      
-                            fileUrl: cols[7] || '' 
-                        });
-                    }
-                });
-                renderList('공지');
-            } catch (error) {
-                document.getElementById('content-area').innerHTML = '<p>데이터를 불러오지 못했습니다.</p>';
-            }
+        async function isNumberTaken(number) {
+            const q = query(collection(db, "users"), where("number", "==", number.toString()));
+            const snap = await getDocs(q);
+            return !snap.empty;
         }
 
-        function renderList(targetCategory) {
-            const contentArea = document.getElementById('content-area');
-            const filteredData = allData.filter(item => item.category === targetCategory);
+        function getLocalDateStr(date) {
+            const offset = date.getTimezoneOffset() * 60000;
+            return (new Date(date - offset)).toISOString().slice(0, 10);
+        }
 
-            filteredData.sort((a, b) => new Date(a.targetDate) - new Date(b.targetDate));
-
-            if (filteredData.length === 0) {
-                contentArea.innerHTML = '<ul class="notice-list"><li>등록된 내용이 없습니다.</li></ul>';
-                return;
-            }
-
-            const ul = document.createElement('ul');
-            ul.className = 'notice-list';
-            const today = getTodayStr();
-
-            filteredData.forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'notice-item';
-                
-                if (item.targetDate && item.targetDate < today) {
-                    li.classList.add('past-event');
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    profile = snap.data();
+                    showScreen('main-screen');
+                    document.getElementById('post-date').value = getLocalDateStr(new Date());
+                    document.getElementById('user-info').innerText = `${profile.number}번 접속중`;
+                    listenPosts();
+                } else {
+                    showScreen('sso-number-screen');
                 }
-
-                let fileHtml = '';
-                if (item.fileUrl) {
-                    const viewUrl = convertDriveLink(item.fileUrl);
-                    fileHtml = `<br><img src="${viewUrl}" class="attached-img" alt="첨부 이미지" onerror="this.outerHTML='<a href=&quot;${item.fileUrl}&quot; target=&quot;_blank&quot; class=&quot;attached-file&quot;>📎 첨부파일 열기</a>'">`;
-                }
-
-                li.innerHTML = `
-                    <div class="notice-header">
-                        <span class="notice-date">📅 ${item.targetDate}</span>
-                        <a class="notice-title">${item.title}</a>
-                        <span class="notice-meta">${item.author} | 작성: ${item.timestamp.split(' ')[0]}</span>
-                    </div>
-                    <div class="notice-content">
-                        ${item.content}
-                        ${fileHtml}
-                    </div>
-                `;
-                
-                li.querySelector('.notice-title').addEventListener('click', () => {
-                    li.querySelector('.notice-content').classList.toggle('active');
-                });
-                ul.appendChild(li);
-            });
-            contentArea.innerHTML = '';
-            contentArea.appendChild(ul);
-        }
-
-        function renderMealUI() {
-            const contentArea = document.getElementById('content-area');
-            const mealData = allData.filter(item => item.category === '급식');
-            
-            const todayStr = getTodayStr();
-            const tomorrowStr = getTomorrowStr();
-
-            const todayMeal = mealData.find(item => item.targetDate === todayStr);
-            const tomorrowMeal = mealData.find(item => item.targetDate === tomorrowStr);
-
-            const formatMeal = (meal) => {
-                if (!meal) return "<p>등록된 급식이 없습니다.</p>";
-                let imgHtml = meal.fileUrl ? `<img src="${convertDriveLink(meal.fileUrl)}" class="attached-img" style="max-height:150px;">` : '';
-                return `<strong>${meal.title}</strong><br><br>${meal.content}${imgHtml}`;
-            };
-
-            contentArea.innerHTML = `
-                <div class="bus-route-container">
-                    <div class="bus-line"></div>
-                    
-                    <div class="bus-stop today">
-                        <div class="stop-label">이번 역 (오늘)</div>
-                        <div class="stop-circle"></div>
-                        <div class="meal-card">${formatMeal(todayMeal)}</div>
-                    </div>
-                    
-                    <div class="bus-stop">
-                        <div class="stop-label">다음 역 (내일)</div>
-                        <div class="stop-circle"></div>
-                        <div class="meal-card">${formatMeal(tomorrowMeal)}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function changeTab(category) {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (category === '급식') {
-                renderMealUI();
             } else {
-                renderList(category);
+                showScreen('login-screen');
             }
+        });
+
+        window.login = () => {
+            const email = document.getElementById('login-email').value;
+            const pw = document.getElementById('login-password').value;
+            signInWithEmailAndPassword(auth, email, pw).catch(e => alert("로그인 실패: " + e.message));
+        };
+
+        window.signup = async () => {
+            const email = document.getElementById('signup-email').value;
+            const num = document.getElementById('signup-number').value;
+            const pw = document.getElementById('signup-password').value;
+            if(!email || !num || !pw) return alert("전부 입력하세요.");
+            
+            if (await isNumberTaken(num)) return alert("이미 가입된 번호입니다.");
+
+            try {
+                const res = await createUserWithEmailAndPassword(auth, email, pw);
+                await setDoc(doc(db, "users", res.user.uid), { number: num, isAdmin: false, email: email });
+                alert("가입 성공!");
+            } catch (e) { alert("가입 실패: " + e.message); }
+        };
+
+        window.googleLogin = async () => {
+            try { await signInWithPopup(auth, googleProvider); } 
+            catch (e) { alert("Google 로그인 실패"); }
+        };
+
+        window.saveSsoNumber = async () => {
+            const num = document.getElementById('sso-number').value;
+            if(!num) return alert("번호를 입력하세요.");
+            if (await isNumberTaken(num)) return alert("이미 가입된 번호입니다.");
+            await setDoc(doc(db, "users", auth.currentUser.uid), { number: num, isAdmin: false, email: auth.currentUser.email });
+            location.reload();
+        };
+
+        window.addPost = async () => {
+            const category = document.getElementById('post-cat').value;
+            const targetDate = document.getElementById('post-date').value;
+            const text = document.getElementById('post-text').value;
+            if(!text || !targetDate) return;
+            await addDoc(collection(db, "posts"), { category, text, targetDate, author: profile.number, uid: auth.currentUser.uid, createdAt: serverTimestamp() });
+            document.getElementById('post-text').value = "";
+        };
+
+        function listenPosts() {
+            const today = new Date();
+            const todayStr = getLocalDateStr(today);
+            const nextWeek = new Date(today);
+            nextWeek.setDate(today.getDate() + 7);
+            const nextWeekStr = getLocalDateStr(nextWeek);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            const tomorrowStr = getLocalDateStr(tomorrow);
+
+            const q = query(collection(db, "posts"), where("targetDate", ">=", todayStr), orderBy("targetDate", "asc"));
+            onSnapshot(q, (snap) => {
+                const lists = { meal: '', assessment: '', homework: '', material: '' };
+                let weekly = ''; let mealInfo = '정보 없음';
+                snap.forEach(d => {
+                    const post = d.data();
+                    const canDel = post.uid === auth.currentUser.uid || profile.isAdmin;
+                    const dateLab = post.targetDate === todayStr ? '오늘' : post.targetDate.substring(5);
+                    if (post.category === 'meal' && post.targetDate === tomorrowStr) mealInfo = post.text;
+                    if (post.category === 'assessment' && post.targetDate <= nextWeekStr) {
+                        weekly += `[${dateLab}] ${post.text.split('\n')[0]}\n`;
+                    }
+                    const html = `<div class="item"><span class="date-tag">${dateLab}</span>${post.text}${canDel ? `<span class="del" onclick="deletePost('${d.id}')">X</span>` : ''}</div>`;
+                    if(lists[post.category] !== undefined) lists[post.category] += html;
+                });
+                document.getElementById('top-meal').innerText = mealInfo;
+                document.getElementById('top-weekly').innerText = weekly || '일정 없음';
+                Object.keys(lists).forEach(k => document.getElementById(`list-${k}`).innerHTML = lists[k] || '<div style="color:#444; font-size:11px;">EMPTY</div>');
+            });
         }
 
-        fetchData();
+        window.deletePost = async (id) => { if(confirm("삭제?")) await deleteDoc(doc(db, "posts", id)); };
+        window.logout = () => signOut(auth);
+        window.showSignup = () => showScreen('signup-screen');
+        window.showLogin = () => showScreen('login-screen');
     </script>
 </body>
 </html>
